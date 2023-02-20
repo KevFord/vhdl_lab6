@@ -114,7 +114,7 @@ begin
                      s_subtraction_step <= sub_hundred;
                   
                   when sub_hundred =>
-                     if s_input_vector_int > 100 then -- Compare
+                     if s_input_vector_int > 99 then -- Compare
                         s_input_vector_int <= s_input_vector_int - 100; -- Subtract 100
                         bcd_2 <= x"1"; -- As per the specification the maximum input will be 127. This means the first BCD number...
                         else bcd_2 <= x"0"; -- ... will be either a one or a zero, therefor we can hardcode outputs.
@@ -123,10 +123,12 @@ begin
                   
                   when sub_tens =>
                      if s_tens_done_flag /= '1' then -- This flag represents if the calculation is done or not.
-                        if s_input_vector_int > 10 then -- Compare
+                        if s_input_vector_int > 9 then -- Compare
                            s_input_vector_int <= s_input_vector_int - 10; -- Subtract 10, this may be repeated multiple times.
+                           -- /////// ERROR INTRODUCED TO TEST TESTBENCH ERROR HANDLING////////
                            s_tens <= s_tens + 1; -- Add one for each iteration of the "loop".
-                        else -- No longer greater than 10.
+                           -- /////// ERROR INTRODUCED TO TEST TESTBENCH ERROR HANDLING////////
+                           else -- No longer greater than 10.
                            bcd_1 <= std_logic_vector(to_unsigned(s_tens, 4)); -- Convert the integer value into std_logic_vector form.
                            s_tens_done_flag <= '1'; -- Signal the transformation is done, no more looping.
                            s_subtraction_step <= sub_ones;
@@ -137,7 +139,7 @@ begin
                      if s_ones_done_flag /= '1' then
                         if s_input_vector_int > 0 then
                            s_input_vector_int <= s_input_vector_int - 1;
-                           s_ones <= s_ones + 1;
+                           s_ones <= s_ones + 1; -- ERROR Overflows to 10 in TB Simulation...
                         else 
                            bcd_0 <= std_logic_vector(to_unsigned(s_ones, 4));
                            s_ones_done_flag <= '1';

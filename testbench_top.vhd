@@ -124,14 +124,10 @@ begin
          pr_write("ERROR : 123 decode NOK");
       end if;
 
-      --variable v_test_input   : integer range 0 to 127 := 0;
-
+      -- //////////////////////////////////////////////////////////// 
       for i in 0 to 127 loop -- Generate a new number to be tested.
 
-         --pr_Write("Number to be tested is: ");
-         --report integer'image(i); -- Print out the current iteration of the loop as a string.
-
-      -- wait for clock signal to go high
+         -- wait for clock signal to go high
          wait until clock_50 = '1';
          bcd_input_vector     <= std_logic_vector(to_unsigned(i,bcd_input_vector'length));
 
@@ -144,6 +140,9 @@ begin
 
          wait until bcd_valid_out = '1';
          
+         --pr_Write("Valid_out detected, number in is: ");
+         --report integer'image(i); -- Print out the current iteration of the loop as a string.
+
       -- Check the bcd outputs
          if i >= 100 then
             if bcd_2 /= c_bcd_array(1) then
@@ -167,8 +166,8 @@ begin
 
             end if;
          end if;
-         --pr_write("All values between 0 - 127 seem to be correct.");
       end loop;
+      -- ////////////////////////////////////////////////////////////
       
 
       pr_write("Testbench ends...");
